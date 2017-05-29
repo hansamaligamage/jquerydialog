@@ -1,0 +1,105 @@
+@model studentmanagementsystem.ViewModels.StudentViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(function () {
+
+        $('a[id*=btnDelete]').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var id = $(this).parent()[0].id;
+            $('#confirmDialog').data('id', id).dialog('open');
+        });
+
+        $("#confirmDialog").dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            buttons: {
+                "Ok": function () {
+                    var id = $(this).data("id");
+                    window.location.href = '/Assignments/Delete/' + id;
+                },
+                "Cancel": function (e) {
+                    $(this).dialog("close");
+                }
+            },
+        });
+    });
+</script>
+
+
+
+<h2>Details</h2>
+
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+    </dl>
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="display:none">
+
+                </th>
+                <th>
+                    @Html.Display("Title")
+                </th>
+                <th>
+                    @Html.Display("Subject")
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.Assignments)
+        {
+            <tr>
+                <td style="display:none">
+                    @Html.HiddenFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject)
+                </td>
+                <td id="@item.Id">
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @id = "btnDelete" })
+                </td>
+            </tr>
+
+        }
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<div id="confirmDialog" title="Remove Assignmnet" hidden>
+    <p>Do you want to save changes </p>
+</div>
